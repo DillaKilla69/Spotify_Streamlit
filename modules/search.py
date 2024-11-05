@@ -19,6 +19,8 @@ def get_band():
 
 
 def get_artist_top_tracks(sp, band:str, limit=3):
+
+
     """Summary
 
     Args:
@@ -31,7 +33,7 @@ def get_artist_top_tracks(sp, band:str, limit=3):
     """
     
     results = sp.search(q=f'artist:{band}', type='track', limit=limit)
-    tracks = []
+    tracks = [] 
     for idx, item in enumerate(results['tracks']['items']):
         track = sp.track(item['id'])
         features = sp.audio_features([item['id']])

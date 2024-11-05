@@ -21,4 +21,4 @@ def create_app_state():
         st.session_state["band"] = None
 
     if "tracks" not in st.session_state:
-        st.session_state["tracks"] = None
+        st.session_state["tracks"] = []
