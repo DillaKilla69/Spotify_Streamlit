@@ -32,10 +32,8 @@ def create_sp_session(client_id, client_secret):
         st.error("error: invalid client_id or client_secret")
 
 
-@st.dialog("login:")
+@st.dialog("Provide your client_id and client_secret")
 def render_login():
-
-    st.title("enter you client_id and client_secret")
 
     with st.form("enter your Spotify credentials"):
         st.session_state["client_id"] = st.text_input("e18a33b810214ef997ebd806aaf48f0e")

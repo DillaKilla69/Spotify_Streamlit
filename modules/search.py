@@ -33,24 +33,14 @@ def get_artist_top_tracks(sp, band:str, limit=3):
     """
     
     results = sp.search(q=f'artist:{band}', type='track', limit=limit)
-    tracks = [] 
+    st.session_state["tracks"] = [] 
     for idx, item in enumerate(results['tracks']['items']):
         track = sp.track(item['id'])
         features = sp.audio_features([item['id']])
-        tracks.append({
+        st.session_state["tracks"].append({
             'name': track['name'],
             'artist': track['artists'][0]['name'],
             'features': features[0]
         })
-    return tracks
+    return st.session_state["tracks"]
 
-
-def test_response(artist_name, sp, limit=10):
-    try:
-        response = requests.get(f"https://api.spotify.com/v1/search?q=artist:{artist_name}&type=track&limit={limit}", headers={'Authorization': f'Bearer {sp}'})
-        print(f"HTTP Status Code: {response.status_code}")
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {str(e)}")
-        return []
-
-# def get_albums(sp, artist_name):
