@@ -1,7 +1,6 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
-
 from modules.creds import render_login
 from modules.state_manager import create_app_state
 

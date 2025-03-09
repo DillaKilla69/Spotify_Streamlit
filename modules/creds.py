@@ -1,9 +1,9 @@
-import spotipy
-import requests
-from spotipy.oauth2 import SpotifyOauthError
-from spotipy.oauth2 import SpotifyClientCredentials
-import streamlit as st
 import time
+
+import requests
+import spotipy
+import streamlit as st
+from spotipy.oauth2 import SpotifyClientCredentials, SpotifyOauthError
 
 
 def validate_credentials(client_id, client_secret):

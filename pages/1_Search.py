@@ -1,8 +1,10 @@
-import streamlit as st
 import pandas as pd
-from modules.search import get_artist_top_tracks, search_albums 
+import streamlit as st
+
 from modules.creds import render_login
+from modules.search import get_artist_top_tracks, search_albums
 from modules.state_manager import create_app_state
+
 
 def main():
 

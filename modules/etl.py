@@ -1,5 +1,6 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
+
 
 def isolate_num_cols(df):
     numeric_columns = df.select_dtypes(include=[np.number]).columns

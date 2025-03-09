@@ -1,4 +1,5 @@
 import plotly_express as px
+
 # Create the choropleth map
 
 def create_map(df):
