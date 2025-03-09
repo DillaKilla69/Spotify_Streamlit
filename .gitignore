@@ -3,3 +3,6 @@ data/
 .venv/
 *.csv
 US_Accidents_March23.csv
+lessons/
+gdb/
+.cache/

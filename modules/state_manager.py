@@ -22,3 +22,6 @@ def create_app_state():
 
     if "tracks" not in st.session_state:
         st.session_state["tracks"] = []
+
+    if "albums" not in st.session_state:
+        st.session_state["albums"] = []
