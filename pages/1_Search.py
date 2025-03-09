@@ -16,7 +16,6 @@ def main():
     options = ["tracks", "album", "shows"]
 
     selected_option = st.sidebar.selectbox("Choose a search type:", options)
-
     sidebar_input = st.sidebar.text_input("Search Spotify for artist tracks:")
 
     if st.sidebar.button("submit query"):

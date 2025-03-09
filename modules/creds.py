@@ -51,6 +51,8 @@ def render_login():
             sp = create_sp_session(client_id=st.session_state["client_id"],
                                     client_secret=st.session_state["client_secret"])
             if sp:
-                st.success("Authentication successful!")
-                time.sleep(2)
+                with st.spinner("Authenicating Session..."):
+                    time.sleep(3)
+                st.success("Authenticated!")
+                time.sleep(1)
                 st.rerun()

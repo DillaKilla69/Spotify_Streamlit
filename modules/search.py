@@ -1,7 +1,5 @@
-import requests
-import spotipy
 import streamlit as st
-from spotipy.oauth2 import SpotifyClientCredentials
+
 
 
 def get_band():
