@@ -3,7 +3,7 @@ import time
 import requests
 import spotipy
 import streamlit as st
-from spotipy.oauth2 import SpotifyClientCredentials, SpotifyOauthError
+from spotipy.oauth2 import SpotifyClientCredentials
 
 
 def validate_credentials(client_id, client_secret):

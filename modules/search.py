@@ -1,76 +1,73 @@
 import streamlit as st
+import pandas as pd
 
 
+def search_albums(sp, band: str, limit=20):
 
-def get_band():
-    """_summary_
-
-    Returns:
-        _type_: _description_
-    """
-    with st.sidebar:
-        band = st.text_input("enter band name",help="press enter!")
-        if band:
-            st.session_state.band = band
-            st.write(band)
-
-            return band
-
-
-def get_artist_top_tracks(sp, band:str, limit=10):
-
-
-    """Summary
-
-    Args:
-        sp (_type_): _description_
-        band (str): _description_
-        limit (int, optional): _description_. Defaults to 3.
-
-    Returns:
-        _type_: _description_
-    """
     # Search for all data associated with search term and data type
-    results = sp.search(q=f'artist:{band}', type='track', limit=limit)
+    results = sp.search(q=f'artist:{band}', type='album', limit=limit)
 
-    #empty session state after every rerun 
-    st.session_state["tracks"] = [] 
-
-    #expose data within the returned JSON
-    for item in results['tracks']['items']:
-        track = item['name']
-
-        #create dictionary to house result columns
-        st.session_state["tracks"].append({
-            'Name': track,
-            'Artist': item['artists'][0]['name'],
-            'Album': item['album']['name'],
-            'popularity': item['popularity']
-        })
-
-    return sorted(st.session_state["tracks"], key=lambda track: track.get("popularity", 0), reverse=True)
-
-
-#Need further research... does changing 'type' to album aggregate songs by album?
-#changes result of albums if line 58 is edited to 'artist:{album}'
-def search_albums(sp, album:str, limit=10):
-    # Search for all data associated with search term and data type
-    results = sp.search(q=f'album:{album}', type='album', limit=limit)
-    st.write(results)
-    # st.write(q)
-
-    #empty session state after every rerun 
-    st.session_state["tracks"] = [] 
-
-    #expose data within the returned JSON
+    # Empty session state after every rerun 
+    album_list = st.session_state["albums"]
+    album_list = []
+    
+    # Expose data within the returned JSON
     for item in results['albums']['items']:
-        track = item['name']
+        artist = item['artists'][0]['name']
+        album = item['name']
+        type = item['album_type']
+        total_tracks = item['total_tracks']
+        release_date = item['release_date']
 
-        #create dictionary to house result columns
-        st.session_state["tracks"].append({
-            'Album': item['name'],
-            'Artist': item['artists'][0]['name']
+        # Create dictionary to house result columns
+        album_list.append({
+            'Artist': artist,
+            'Album': album,
+            'Type': type,
+            'total_tracks': total_tracks,
+            'Release Date': release_date
         })
 
-    return st.session_state["tracks"]
+    # Sort the album list by release_date in ascending order
+    album_list_sorted = sorted(album_list, key=lambda x: x['Release Date'])
+    album_sorted_df = pd.json_normalize(album_list_sorted)
+    st.header(f"{band} top tracks")
+    st.write(album_sorted_df)
+
+def top_tracks(sp, band):
+
+    #empty session state after every rerun 
+    track_list = st.session_state["tracks"]
+    track_list = []
+
+    #all results from search
+    results_json = sp.search(q=f'artist:{band}', type='artist', limit=5)
+
+    #isolate artist_id
+    artist_id = results_json["artists"]['items'][0]['id']
+    
+    #given artist_id, search top tracks - return in json
+    top_tracks_json = sp.artist_top_tracks(artist_id)
+
+    # st.write(top_tracks_json)
+
+#expose data within the returned JSON
+    for tracks in top_tracks_json['tracks']:
+        title = tracks['name']
+        artist = ', '.join([artist['name'] for artist in tracks['artists']])
+        album = tracks['album']['name']
+        popularity = tracks['popularity']
+
+        #create list of dictionaries to house result columns
+        track_list.append({
+            'Title': title,
+            'Artist': artist,
+            'Album': album,
+            'Popularity': popularity
+        })
+
+    track_list = sorted(track_list, key=lambda x: x["Popularity"], reverse=True)
+    sorted_tracks_df = pd.DataFrame(track_list)
+    st.header(f"{band} top tracks") 
+    st.write(sorted_tracks_df)
 
