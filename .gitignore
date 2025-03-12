@@ -3,6 +3,7 @@
 data/
 .venv/
 toDo.txt
-testing.ipynb
+
 modules/__pycache__/
+*.ipynb
 modules/__pycache__/*.pyc
