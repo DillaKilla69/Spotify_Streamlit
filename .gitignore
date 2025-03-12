@@ -4,3 +4,5 @@
 modules/__pycache__/
 *.ipynb
 modules/__pycache__/*.pyc
+*.toml
+*.lock
