@@ -19,12 +19,17 @@ def validate_credentials(client_id, client_secret):
 
     print("response code:", response.status_code)
 
-    return response.status_code == 200
+    if response.status_code == 200:
+        print('response code:', response.status_code)
+        return response.status_code
+    
+    else:
+        print('nah, you fucked up!')
 
 
 def create_sp_session(client_id, client_secret):
 
-    if validate_credentials(client_id, client_secret):
+    if validate_credentials(client_id, client_secret) == 200:
         auth_manager = SpotifyClientCredentials(
             client_id=st.session_state["client_id"],
             client_secret=st.session_state["client_secret"],

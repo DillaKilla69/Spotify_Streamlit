@@ -10,16 +10,16 @@ def create_app_state():
         st.session_state["dialogue_open"] = False
 
     if "client_id" not in st.session_state:
-        st.session_state["client_id"] = False
+        st.session_state["client_id"] = None
 
     if "client_secret" not in st.session_state:
-        st.session_state["client_secret"] = False
+        st.session_state["client_secret"] = None
 
     if "sp_session" not in st.session_state:
         st.session_state["sp_session"] = None
 
     if "band" not in st.session_state:
-        st.session_state["band"] = None
+        st.session_state["band"] = []
 
     if "tracks" not in st.session_state:
         st.session_state["tracks"] = []

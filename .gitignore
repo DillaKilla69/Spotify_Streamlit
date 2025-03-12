@@ -1,9 +1,6 @@
 # created by virtualenv automatically
 .cache
-data/
 .venv/
-toDo.txt
-
 modules/__pycache__/
 *.ipynb
 modules/__pycache__/*.pyc

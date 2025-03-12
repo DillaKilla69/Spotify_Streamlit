@@ -15,14 +15,14 @@ def main():
     else:
         st.title("Exploring Music with Spotipy")
 
-    # URL of the webpage you want to embed
-    url = "https://spotipy.readthedocs.io/en/2.24.0/"
+        # URL of the webpage you want to embed
+        url = "https://spotipy.readthedocs.io/en/2.24.0/"
 
-    # Display the webpage using an iframe
-    components.html(
-        f'<iframe src="{url}" width="100%" height="600" frameborder="0"></iframe>',
-        height=600,
-    )
+        # Display the webpage using an iframe
+        components.html(
+            f'<iframe src="{url}" width="100%" height="600" frameborder="0"></iframe>',
+            height=600,
+        )
 
 
 if __name__ == "__main__":
