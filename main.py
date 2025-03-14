@@ -8,7 +8,7 @@ from modules.state_manager import create_app_state
 try:
     if "project_setup" not in st.session_state:
         create_app_state()
-        setup_environment()
+        # setup_environment()
 
     else:
         while st.session_state["logged_in"] == False:
