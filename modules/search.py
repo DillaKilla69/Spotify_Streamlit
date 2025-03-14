@@ -3,7 +3,7 @@ import streamlit as st
 import altair as alt
 
 
-def search_albums(sp, band: str, limit=20):
+def search_albums(sp, band: str, limit=50):
 
     # Search for all data associated with search term and data type
     results = sp.search(q=f"artist:{band}", type="album", limit=limit)
@@ -25,16 +25,18 @@ def search_albums(sp, band: str, limit=20):
                 "Artist": artist,
                 "Album": album,
                 "Type": type,
-                "total_tracks": total_tracks,
+                "Total Tracks": total_tracks,
                 "Release Date": release_date,
             }
         )
 
     # Sort the album list by release_date in ascending order
-    album_list_sorted = sorted(album_list, key=lambda x: x["Release Date"])
-    album_sorted_df = pd.json_normalize(album_list_sorted)
-    st.header(f"{band} top tracks")
-    st.write(album_sorted_df)
+    album_sorted_df = pd.DataFrame(album_list).sort_values(
+        by="Release Date", ascending=True
+    )
+
+    st.header(f"{band} Discography")
+    st.dataframe(album_sorted_df, hide_index=True)
 
 
 def top_tracks(sp, band):
@@ -64,10 +66,9 @@ def top_tracks(sp, band):
         track_list.append(
             {
                 "Title": title,
-                "Artist": artist,
                 "Album": album,
-                "Release Date": release_date,
                 "Popularity": popularity,
+                "Release Date": release_date
             }
         )
 
@@ -76,7 +77,7 @@ def top_tracks(sp, band):
     )
 
     st.header(f"{band} top tracks")
-    st.write(sorted_tracks_df)
+    st.dataframe(sorted_tracks_df, hide_index=True)
 
     # Ensure 'Release Date' is in datetime format
     sorted_tracks_df["Release Date"] = pd.to_datetime(
