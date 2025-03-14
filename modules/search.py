@@ -1,12 +1,13 @@
 import pandas as pd
 import streamlit as st
+import altair as alt
+import plotly.express as px
 
 
 def search_albums(sp, band: str, limit=20):
 
     # Search for all data associated with search term and data type
     results = sp.search(q=f"artist:{band}", type="album", limit=limit)
-    st.write(results)
     # Empty session state after every rerun
     album_list = st.session_state["albums"]
     album_list = []
@@ -58,16 +59,58 @@ def top_tracks(sp, band):
         artist = ", ".join([artist["name"] for artist in tracks["artists"]])
         album = tracks["album"]["name"]
         popularity = tracks["popularity"]
+        release_date = tracks["album"]["release_date"]
 
         # create list of dictionaries to house result columns
         track_list.append(
-            {"Title": title, "Artist": artist, "Album": album, "Popularity": popularity}
+            {
+                "Title": title,
+                "Artist": artist,
+                "Album": album,
+                "Release Date": release_date,
+                "Popularity": popularity,
+            }
         )
 
-    track_list = sorted(track_list, key=lambda x: x["Popularity"], reverse=True)
-    sorted_tracks_df = pd.DataFrame(track_list)
+    sorted_tracks_df = pd.DataFrame(track_list).sort_values(
+        by="Popularity", ascending=False
+    )
+
     st.header(f"{band} top tracks")
     st.write(sorted_tracks_df)
+
+    # Ensure 'Release Date' is in datetime format
+    sorted_tracks_df["Release Date"] = pd.to_datetime(
+        sorted_tracks_df["Release Date"],
+        errors='coerce'
+
+    )   
+
+    # Get the min and max Popularity values
+    min_popularity = sorted_tracks_df["Popularity"].min()
+    max_popularity = sorted_tracks_df["Popularity"].max()
+
+    chart = (
+        alt.Chart(sorted_tracks_df)
+        .mark_line(point=True, smooth=True)
+        .encode(
+            x=alt.X(
+                "Release Date:T", 
+                title="Release Date",
+                timeUnit='yearmonth'),
+            y=alt.Y(
+                "Popularity:Q",
+                title="Popularity",
+                scale=alt.Scale(
+                    domain=[min_popularity, max_popularity]
+                ), 
+            ),
+            tooltip=list(sorted_tracks_df.columns),
+        )
+        .properties(title=f"{band} Track Popularity by Release Date")
+    )
+
+    st.altair_chart(chart, use_container_width=True)
 
 
 def artist_genres(sp, band):
@@ -77,7 +120,6 @@ def artist_genres(sp, band):
 
     # all results from search
     results_json = sp.search(q=f"artist:{band}", type="artist", limit=50)
-    st.write(results_json)
 
     for item in results_json["artists"]["items"]:
         artist = item["name"]

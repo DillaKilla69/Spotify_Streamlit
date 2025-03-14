@@ -3,11 +3,21 @@ import streamlit as st
 
 def create_app_state():
 
-    if "login" not in st.session_state:
-        st.session_state["login"] = False
+    # Ensure session state variables exist
+    if "project_setup" not in st.session_state:
+        st.session_state["project_setup"] = False
 
-    if "dialogue_open" not in st.session_state:
-        st.session_state["dialogue_open"] = False
+    if "show_login_dialog" not in st.session_state:
+        st.session_state["show_login_dialog"] = False
+
+    if "logged_in" not in st.session_state:
+        st.session_state["logged_in"] = False
+
+    if "trigger_rerun" not in st.session_state:
+        st.session_state["trigger_rerun"] = False  # New flag to control rerun timing
+
+    if "poetry_setup" not in st.session_state:
+        st.session_state["poetry_setup"] = False
 
     if "client_id" not in st.session_state:
         st.session_state["client_id"] = None

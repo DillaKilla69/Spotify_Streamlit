@@ -20,11 +20,11 @@ def validate_credentials(client_id, client_secret):
     print("response code:", response.status_code)
 
     if response.status_code == 200:
-        print('response code:', response.status_code)
+        print("response code:", response.status_code)
         return response.status_code
-    
+
     else:
-        print('nah, you fucked up!')
+        print("nah, you fucked up!")
 
 
 def create_sp_session(client_id, client_secret):
@@ -36,7 +36,7 @@ def create_sp_session(client_id, client_secret):
         )
         sp = spotipy.Spotify(auth_manager=auth_manager)
 
-        st.session_state["login"] = True
+        st.session_state["show_login_dialog"] = True
         st.session_state["sp_session"] = sp
 
         return sp
@@ -68,8 +68,13 @@ def render_login():
             )
 
             if sp:
-                with st.spinner("Authenicating Session..."):
+                with st.spinner("Authenicating Session...", show_time=True):
                     time.sleep(3)
                 st.success("Authenticated!")
                 time.sleep(1)
+                st.session_state["logged_in"] = True
+                st.session_state["show_login_dialog"] = False
+                st.session_state["trigger_rerun"] = (
+                    True  # Ensure main.py detects the change
+                )
                 st.rerun()
