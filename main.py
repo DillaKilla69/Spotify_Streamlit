@@ -11,7 +11,8 @@ if st.session_state["logged_in"] == False:
     render_login()
 
 if st.session_state["logged_in"] == True:
-    st.title("Exploring Music with Spotipy")
+    st.title("Using Spotipy to Interact with Spofify API")
+    st.caption("Docs from Spotipy...")
 
     url = "https://spotipy.readthedocs.io/en/2.24.0/"
     components.html(
