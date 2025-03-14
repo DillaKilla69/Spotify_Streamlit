@@ -3,39 +3,43 @@ import streamlit as st
 import altair as alt
 
 
-def search_albums(sp, band: str, limit=50):
+def get_artist_id(sp, artist_name):
+    """Search for an exact artist match and return their Spotify ID."""
+    results = sp.search(q=f'artist:"{artist_name}"', type='artist', limit=10)
+    
+    for artist in results['artists']['items']:
+        if artist['name'].lower() == artist_name.lower():  # Exact match check
+            return artist['id']
+    return None  # Return None if no exact match found
 
+def search_albums(sp, artist_name):
     # Search for all data associated with search term and data type
-    results = sp.search(q=f"artist:{band}", type="album", limit=limit)
-    # Empty session state after every rerun
-    album_list = st.session_state["albums"]
+
     album_list = []
+    artist_id = get_artist_id(sp, artist_name)
+
+    if not artist_id:
+        return f"No exact match found for '{artist_name}'"
+
+    albums = sp.artist_albums(artist_id, album_type='album', include_groups='album,single')
 
     # Expose data within the returned JSON
-    for item in results["albums"]["items"]:
-        artist = item["artists"][0]["name"]
-        album = item["name"]
-        type = item["album_type"]
-        total_tracks = item["total_tracks"]
-        release_date = item["release_date"]
-
-        # Create dictionary to house result columns
-        album_list.append(
-            {
-                "Artist": artist,
-                "Album": album,
-                "Type": type,
-                "Total Tracks": total_tracks,
-                "Release Date": release_date,
-            }
-        )
+    album_list = [
+        {
+            "Name": album["name"], 
+            "Album Type": album["album_type"],  # Access album type
+            "Release Date": album["release_date"], 
+            "Total Tracks": album["total_tracks"]
+        }
+        for album in albums['items']
+    ]
 
     # Sort the album list by release_date in ascending order
     album_sorted_df = pd.DataFrame(album_list).sort_values(
         by="Release Date", ascending=True
     )
 
-    st.header(f"{band} Discography")
+    st.header(f"{artist_name} Discography")
     st.dataframe(album_sorted_df, hide_index=True)
 
 

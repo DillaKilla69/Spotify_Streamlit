@@ -27,7 +27,7 @@ else:
     if selected_option == "Discography":
         sidebar_input = st.sidebar.text_input("Search for Artist Discography:")
         if st.sidebar.button("submit query"):
-            search_albums(st.session_state["sp_session"], band=sidebar_input)
+            search_albums(st.session_state["sp_session"], artist_name=sidebar_input)
 
     if selected_option == "Artist Genres":
         sidebar_input = st.sidebar.text_input("Search for Artist Genres:")
