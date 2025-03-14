@@ -1,10 +1,14 @@
 import streamlit as st
 
+from modules.state_manager import create_app_state
 from modules.creds import render_login
 from modules.search import artist_genres, search_albums, top_tracks
 
-if st.session_state["logged_in"] == False:
-    render_login()
+if "logged_in" not in st.session_state:
+    create_app_state()
+
+    if st.session_state["logged_in"] == False:
+        render_login()
 
 else:
 
