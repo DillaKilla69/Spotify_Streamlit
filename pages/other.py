@@ -25,9 +25,11 @@ with st.sidebar.form("enter_params", enter_to_submit=True, border=False):
 
 if st.session_state["selected_option"] is None:
     st.info("Use the search box to get started!")
+
 if submit_query:
     if st.session_state["selected_option"] == "Top Tracks":
         try:
+            st.header(f"{sidebar_input} Track Analysis")
             with st.expander("Tracklist", expanded=True):
                 tracks = top_tracks(st.session_state["sp_session"], band=sidebar_input)
             with st.expander("Popularity"):
@@ -38,10 +40,12 @@ if submit_query:
 
     elif st.session_state["selected_option"] == "Discography":
         try:
-            albums = search_albums(st.session_state["sp_session"], sidebar_input)
-            st.header(f"{sidebar_input} Album Type Distribution")
-            album_type_distro(albums)
-            album_type_over_time(albums)
+            st.header(f"{sidebar_input} Discography Analysis")
+            with st.expander("Discography", expanded=True):
+                albums = search_albums(st.session_state["sp_session"], sidebar_input)
+            with st.expander("album distribution"):
+                album_type_distro(albums)
+                album_type_over_time(albums)
         except Exception as e:
             st.error(f"🚨 Error retrieving discography: {e}")
 

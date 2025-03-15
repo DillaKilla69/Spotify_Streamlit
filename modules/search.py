@@ -41,8 +41,8 @@ def search_albums(sp, artist_name):
         by="Release Date", ascending=True
     )
 
+    st.subheader(f"{artist_name} albums")
     st.dataframe(album_sorted_df, hide_index=True)
-
     return album_sorted_df if isinstance(album_sorted_df, pd.DataFrame) else None
 
 
@@ -83,7 +83,7 @@ def top_tracks(sp, band):
         by="Popularity", ascending=False
     )
 
-    st.header(f"{band} top tracks")
+    st.subheader(f"{band} top tracks")
     st.dataframe(sorted_tracks_df, hide_index=True)
 
     # Ensure 'Release Date' is in datetime format

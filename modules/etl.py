@@ -8,6 +8,7 @@ def album_type_distro(album_df: pd.DataFrame):
     try:
 
         album_counts = album_df["Album Type"].value_counts()
+        st.subheader("Album Types")
         st.bar_chart(album_counts, y_label="Count", x_label="Type")
 
     except Exception as e:
@@ -47,10 +48,9 @@ def album_type_over_time(album_df):
                 color="Album Type:N",  # Different colors for each album type
                 tooltip=["Year", "Album Type", "Count"],  # Hover tooltips
             )
-            .properties(title="Album Type Distribution Over Time")
         )
-
         # Display in Streamlit
+        st.subheader("Album Type Distribution Over Time")
         st.altair_chart(chart, use_container_width=True)
 
     except Exception as e:
