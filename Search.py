@@ -24,7 +24,7 @@ with st.sidebar.form("enter_params", enter_to_submit=True, border=False):
     )  # One submit button for all options
 
 if st.session_state["selected_option"] is None:
-    st.info("Use the search box to get started!")
+    st.info("Use the sidebar to get started!")
 
 if submit_query:
     if st.session_state["selected_option"] == "Top Tracks":
