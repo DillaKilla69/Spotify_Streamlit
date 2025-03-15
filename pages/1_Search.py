@@ -8,7 +8,7 @@ from modules.search import artist_genres, search_albums, top_tracks
 if "logged_in" not in st.session_state:
     create_app_state()
 
-    if st.session_state["logged_in"] == False:
+elif st.session_state["logged_in"] == False:
         render_login()
 
 else:
