@@ -7,9 +7,6 @@ create_app_state()
 
 create_sp_session(st.session_state["client_id"], st.session_state["client_secret"])
 
-# if st.session_state["logged_in"] == False:
-#     render_login()
-
 if st.session_state["client_id"] is not None:
     st.title("Using Spotipy to Interact with Spofify API")
     st.caption("Docs from Spotipy...")
