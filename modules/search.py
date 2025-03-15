@@ -1,6 +1,6 @@
+import altair as alt
 import pandas as pd
 import streamlit as st
-import altair as alt
 
 
 def get_artist_id(sp, artist_name):

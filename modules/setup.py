@@ -1,8 +1,9 @@
-import streamlit as st
+import os
 import subprocess
 import sys
-import os
 import time
+
+import streamlit as st
 
 
 def run_command(command):

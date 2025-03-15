@@ -20,10 +20,10 @@ def create_app_state():
         st.session_state["poetry_setup"] = False
 
     if "client_id" not in st.session_state:
-        st.session_state["client_id"] = st.secrets['clientId']
+        st.session_state["client_id"] = st.secrets["clientId"]
 
     if "client_secret" not in st.session_state:
-        st.session_state["client_secret"] = st.secrets['clientSecret']
+        st.session_state["client_secret"] = st.secrets["clientSecret"]
 
     if "sp_session" not in st.session_state:
         st.session_state["sp_session"] = None
