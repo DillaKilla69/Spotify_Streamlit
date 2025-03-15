@@ -30,7 +30,7 @@ def album_type_over_time(album_df):
 
         # Group by Year and Album Type, then count occurrences
         album_counts = (
-            album_df.groupby(["Year", "Album Type"]).size().reset_index(name="Count")
+            album_df.groupby(["Title","Year", "Album Type"]).size().reset_index(name="Count")
         )
 
         # Ensure there is valid data
@@ -46,7 +46,7 @@ def album_type_over_time(album_df):
                 x=alt.X("Year:O", title="Year"),  # Discrete ordinal X-axis
                 y=alt.Y("Count:Q", title="Number of Albums"),  # Quantitative Y-axis
                 color="Album Type:N",  # Different colors for each album type
-                tooltip=["Year", "Album Type", "Count"],  # Hover tooltips
+                tooltip=[ "Title", "Year", "Album Type", "Count"],  # Hover tooltips
             )
         )
         # Display in Streamlit
@@ -55,7 +55,7 @@ def album_type_over_time(album_df):
 
     except Exception as e:
         st.error(
-            f"🚨 Oops! Something went wrong while data. Try another search term. \n\nError: {e}"
+            f"🚨 Oops! Something went wrong while fetching data. Try another search term. \n\nError: {e}"
         )
 
 

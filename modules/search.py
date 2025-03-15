@@ -28,7 +28,7 @@ def search_albums(sp, artist_name):
     # Expose data within the returned JSON
     album_list = [
         {
-            "Name": album["name"],
+            "Title": album["name"],
             "Album Type": album["album_type"],  # Access album type
             "Release Date": album["release_date"],
             "Total Tracks": album["total_tracks"],
