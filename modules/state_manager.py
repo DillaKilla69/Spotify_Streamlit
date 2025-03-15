@@ -28,14 +28,8 @@ def create_app_state():
     if "sp_session" not in st.session_state:
         st.session_state["sp_session"] = None
 
-    if "band" not in st.session_state:
-        st.session_state["band"] = []
+    if "selected_option" not in st.session_state:
+        st.session_state["selected_option"] = None
 
-    if "tracks" not in st.session_state:
-        st.session_state["tracks"] = []
-
-    if "albums" not in st.session_state:
-        st.session_state["albums"] = []
-
-    if "genres" not in st.session_state:
-        st.session_state["genres"] = []
+    if "sidebar_input" not in st.session_state:
+        st.session_state["sidebar_input"] = []

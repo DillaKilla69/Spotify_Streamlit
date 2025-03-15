@@ -2,6 +2,7 @@ import streamlit as st
 
 from modules.state_manager import create_app_state
 from modules.creds import render_login
+from modules.etl import album_type_distro, track_popularity, album_type_over_time
 from modules.search import artist_genres, search_albums, top_tracks
 
 if "logged_in" not in st.session_state:
@@ -12,24 +13,41 @@ if "logged_in" not in st.session_state:
 
 else:
 
-    options = ["Top Tracks", "Discography", "Shows", "Artist Genres"]
-
+    sidebar_input = st.session_state["sidebar_input"]
+    options = ["Top Tracks", "Discography", "Artist Genres"]
     st.sidebar.header("Search Parameters")
-    selected_option = st.sidebar.selectbox(
+
+    with st.sidebar.form("enter_params"):
+        st.session_state["selected_option"] = st.selectbox(
         "Choose a search type:", options=options, index=None
     )
+        sidebar_input = st.text_input("Enter Artist Name:")
+        submit_query = st.form_submit_button("Submit Query")  # One submit button for all options
 
-    if selected_option == "Top Tracks":
-        sidebar_input = st.sidebar.text_input("Retreive Artist Top Tracks:")
-        if st.sidebar.button("submit query"):
-            top_tracks(st.session_state["sp_session"], band=sidebar_input)
+    if st.session_state["selected_option"] is None:
+        st.info('Use the search box to get started!')
+    if submit_query:
+        if st.session_state["selected_option"] == "Top Tracks":
+            try:
+                with st.expander("Tracklist", expanded=True):
+                    tracks = top_tracks(st.session_state["sp_session"], band=sidebar_input)
+                with st.expander("Popularity"):
+                    st.header(f"{sidebar_input} Tracks by Popularity Over Time")
+                    track_popularity(tracks, sidebar_input)
+            except Exception as e:
+                st.error(f"🚨 Error retrieving top tracks: {e}")
 
-    if selected_option == "Discography":
-        sidebar_input = st.sidebar.text_input("Search for Artist Discography:")
-        if st.sidebar.button("submit query"):
-            search_albums(st.session_state["sp_session"], sidebar_input)
+        elif st.session_state["selected_option"] == "Discography":
+            try:
+                albums = search_albums(st.session_state["sp_session"], sidebar_input)
+                st.header(f'{sidebar_input} Album Type Distribution')
+                album_type_distro(albums)
+                album_type_over_time(albums)
+            except Exception as e:
+                st.error(f"🚨 Error retrieving discography: {e}")
 
-    if selected_option == "Artist Genres":
-        sidebar_input = st.sidebar.text_input("Search for Artist Genres:")
-        if st.sidebar.button("submit query"):
-            artist_genres(st.session_state["sp_session"], band=sidebar_input)
+        elif st.session_state["selected_option"] == "Artist Genres":
+            try:
+                artist_genres(st.session_state["sp_session"], band=sidebar_input)
+            except Exception as e:
+                st.error(f"🚨 Error retrieving artist genres: {e}")

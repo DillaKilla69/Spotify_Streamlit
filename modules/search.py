@@ -5,12 +5,13 @@ import altair as alt
 
 def get_artist_id(sp, artist_name):
     """Search for an exact artist match and return their Spotify ID."""
-    results = sp.search(q=f'artist:"{artist_name}"', type='artist', limit=10)
-    
-    for artist in results['artists']['items']:
-        if artist['name'].lower() == artist_name.lower():  # Exact match check
-            return artist['id']
+    results = sp.search(q=f'artist:"{artist_name}"', type="artist", limit=10)
+
+    for artist in results["artists"]["items"]:
+        if artist["name"].lower() == artist_name.lower():  # Exact match check
+            return artist["id"]
     return None  # Return None if no exact match found
+
 
 def search_albums(sp, artist_name):
     # Search for all data associated with search term and data type
@@ -21,17 +22,18 @@ def search_albums(sp, artist_name):
     if not artist_id:
         return f"No exact match found for '{artist_name}'"
 
-    albums = sp.artist_albums(artist_id, album_type='album', include_groups='album,single')
-
+    albums = sp.artist_albums(
+        artist_id, album_type="album", include_groups="album,single"
+    )
     # Expose data within the returned JSON
     album_list = [
         {
-            "Name": album["name"], 
+            "Name": album["name"],
             "Album Type": album["album_type"],  # Access album type
-            "Release Date": album["release_date"], 
-            "Total Tracks": album["total_tracks"]
+            "Release Date": album["release_date"],
+            "Total Tracks": album["total_tracks"],
         }
-        for album in albums['items']
+        for album in albums["items"]
     ]
 
     # Sort the album list by release_date in ascending order
@@ -39,14 +41,15 @@ def search_albums(sp, artist_name):
         by="Release Date", ascending=True
     )
 
-    st.header(f"{artist_name} Discography")
     st.dataframe(album_sorted_df, hide_index=True)
+
+    return album_sorted_df if isinstance(album_sorted_df, pd.DataFrame) else None
 
 
 def top_tracks(sp, band):
 
     # empty session state after every rerun
-    track_list = st.session_state["tracks"]
+    # track_list = st.session_state["tracks"]
     track_list = []
 
     # all results from search
@@ -72,7 +75,7 @@ def top_tracks(sp, band):
                 "Title": title,
                 "Album": album,
                 "Popularity": popularity,
-                "Release Date": release_date
+                "Release Date": release_date,
             }
         )
 
@@ -85,36 +88,10 @@ def top_tracks(sp, band):
 
     # Ensure 'Release Date' is in datetime format
     sorted_tracks_df["Release Date"] = pd.to_datetime(
-        sorted_tracks_df["Release Date"],
-        errors='coerce'
-
-    )   
-
-    # Get the min and max Popularity values
-    min_popularity = sorted_tracks_df["Popularity"].min()
-    max_popularity = sorted_tracks_df["Popularity"].max()
-
-    chart = (
-        alt.Chart(sorted_tracks_df)
-        .mark_line(point=True, smooth=True)
-        .encode(
-            x=alt.X(
-                "Release Date:T", 
-                title="Release Date",
-                timeUnit='yearmonth'),
-            y=alt.Y(
-                "Popularity:Q",
-                title="Popularity",
-                scale=alt.Scale(
-                    domain=[min_popularity, max_popularity]
-                ), 
-            ),
-            tooltip=list(sorted_tracks_df.columns),
-        )
-        .properties(title=f"{band} Track Popularity by Release Date")
+        sorted_tracks_df["Release Date"], errors="coerce"
     )
 
-    st.altair_chart(chart, use_container_width=True)
+    return sorted_tracks_df
 
 
 def artist_genres(sp, band):

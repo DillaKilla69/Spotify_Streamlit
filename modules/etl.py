@@ -1,29 +1,54 @@
 import matplotlib.pyplot as plt
 import streamlit as st
 import altair as alt
+import pandas as pd
 
-def album_type_distro(df):
-    album_counts = df["Album Type"].value_counts()
+def album_type_distro(album_df:pd.DataFrame):
 
-    st.bar_chart(album_counts, y_label='Count', x_label='Type')
+    try:
 
+        album_counts = album_df["Album Type"].value_counts()
+        st.bar_chart(album_counts, y_label='Count', x_label='Type')
 
+    except Exception as e:
+        st.error(f"🚨 Oops! Something went wrong while retrieving data. Try another search term. \n\nError: {e}")
 
+def album_type_over_time(album_df):
 
+    try:
+        # Ensure "Release Date" column is properly formatted
+        album_df["Release Date"] = pd.to_datetime(album_df["Release Date"], errors="coerce")
 
+        # Extract Year
+        album_df["Year"] = album_df["Release Date"].dt.year
 
+        # Group by Year and Album Type, then count occurrences
+        album_counts = album_df.groupby(["Year", "Album Type"]).size().reset_index(name="Count")
 
-    # Count albums by type
-    # album_counts = df["Album Type"].value_counts()
+        # Ensure there is valid data
+        if album_counts.empty:
+            st.warning("No valid data available for album types over time.")
+            return
 
-    # # Plot bar chart
-    # fig, ax = plt.subplots()
-    # album_counts.plot(kind="bar", ax=ax, color=["blue", "green", "red"])
-    # ax.set_title("Distribution of Album Types")
-    # ax.set_ylabel("Count")
-    # ax.set_xlabel("Album Type")
+    # Create Altair Chart
+        chart = (
+            alt.Chart(album_counts)
+            .mark_line(point=True)  # Line chart with points
+            .encode(
+                x=alt.X("Year:O", title="Year"),  # Discrete ordinal X-axis
+                y=alt.Y("Count:Q", title="Number of Albums"),  # Quantitative Y-axis
+                color="Album Type:N",  # Different colors for each album type
+                tooltip=["Year", "Album Type", "Count"]  # Hover tooltips
+            )
+            .properties(title="Album Type Distribution Over Time")
+        )
 
-    # st.pyplot(fig)
+        # Display in Streamlit
+        st.altair_chart(chart, use_container_width=True)
+
+    except Exception as e:
+        st.error(f"🚨 Oops! Something went wrong while data. Try another search term. \n\nError: {e}")
+
 
 def track_popularity(sorted_tracks_df, artist):
     
@@ -48,7 +73,6 @@ def track_popularity(sorted_tracks_df, artist):
             ),
             tooltip=list(sorted_tracks_df.columns),
         )
-        .properties(title=f"{artist} Track Popularity by Release Date")
     )
 
     st.altair_chart(chart, use_container_width=True)
