@@ -5,3 +5,4 @@ modules/__pycache__/
 *.ipynb
 modules/__pycache__/*.pyc
 ToDo.txt
+.streamlit/

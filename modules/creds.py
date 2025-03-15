@@ -46,35 +46,35 @@ def create_sp_session(client_id, client_secret):
         st.error("error: invalid client_id or client_secret")
 
 
-@st.dialog("Enter Credentials")
-def render_login():
-    with st.form("enter your Spotify credentials"):
-        st.session_state["client_id"] = st.text_input(
-            "ed8202519b564c468c54ee4b78e81661", placeholder="client_id"
-        )
+# @st.dialog("Enter Credentials")
+# def render_login():
+#     with st.form("enter your Spotify credentials"):
+#         st.session_state["client_id"] = st.text_input(
+#             "ed8202519b564c468c54ee4b78e81661", placeholder="client_id"
+#         )
 
-        st.session_state["client_secret"] = st.text_input(
-            "3f37d164acdc4b498ef83f1ca572ad51",
-            type="password",
-            placeholder="client_password",
-        )
+#         st.session_state["client_secret"] = st.text_input(
+#             "3f37d164acdc4b498ef83f1ca572ad51",
+#             type="password",
+#             placeholder="client_password",
+#         )
 
-        submitted = st.form_submit_button("Submit Credentials")
+#         submitted = st.form_submit_button("Submit Credentials")
 
-        if submitted:
-            sp = create_sp_session(
-                client_id=st.session_state["client_id"],
-                client_secret=st.session_state["client_secret"],
-            )
+#         if submitted:
+#             sp = create_sp_session(
+#                 client_id=st.session_state["client_id"],
+#                 client_secret=st.session_state["client_secret"],
+#             )
 
-            if sp:
-                with st.spinner("Authenicating Session...", show_time=True):
-                    time.sleep(3)
-                st.success("Authenticated!")
-                time.sleep(1)
-                st.session_state["logged_in"] = True
-                st.session_state["show_login_dialog"] = False
-                st.session_state["trigger_rerun"] = (
-                    True  # Ensure main.py detects the change
-                )
-                st.rerun()
+#             if sp:
+#                 with st.spinner("Authenicating Session...", show_time=True):
+#                     time.sleep(3)
+#                 st.success("Authenticated!")
+#                 time.sleep(1)
+#                 st.session_state["logged_in"] = True
+#                 st.session_state["show_login_dialog"] = False
+#                 st.session_state["trigger_rerun"] = (
+#                     True  # Ensure main.py detects the change
+#                 )
+#                 st.rerun()
