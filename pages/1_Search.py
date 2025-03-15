@@ -11,7 +11,7 @@ sidebar_input = st.session_state["sidebar_input"]
 options = ["Top Tracks", "Discography", "Artist Genres"]
 st.sidebar.header("Search Parameters")
 
-with st.sidebar.form("enter_params"):
+with st.sidebar.form("enter_params", enter_to_submit=True, border=False):
     st.session_state["selected_option"] = st.selectbox(
     "Choose a search type:", options=options, index=None
 )
