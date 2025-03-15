@@ -29,7 +29,7 @@ if st.session_state["selected_option"] is None:
 if submit_query:
     if st.session_state["selected_option"] == "Top Tracks":
         try:
-            st.header(f"{sidebar_input} Track Analysisr")
+            st.header(f"{sidebar_input} Track Analysis")
             with st.expander("Tracklist", expanded=True):
                 tracks = top_tracks(st.session_state["sp_session"], band=sidebar_input)
             with st.expander("Popularity"):
