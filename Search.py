@@ -43,7 +43,7 @@ if submit_query:
             st.header(f"{sidebar_input} Discography Analysis")
             with st.expander("Discography", expanded=True):
                 albums = search_albums(st.session_state["sp_session"], sidebar_input)
-            with st.expander("album distribution"):
+            with st.expander("album distribution", expanded=False):
                 album_type_distro(albums)
                 album_type_over_time(albums)
         except Exception as e:
