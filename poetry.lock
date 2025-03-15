@@ -2247,6 +2247,20 @@ files = [
 ]
 
 [[package]]
+name = "spotifyapi"
+version = "0.1.1"
+description = "A Python wrapper to interact the Spotify web API"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "spotifyapi-0.1.1.tar.gz", hash = "sha256:0ee925680c869a524de005057f498de14f6bb762b81fb1ac1eb02308440bd972"},
+]
+
+[package.dependencies]
+requests = "*"
+
+[[package]]
 name = "spotipy"
 version = "2.25.1"
 description = "A light weight Python library for the Spotify Web API"
@@ -2584,4 +2598,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10"
-content-hash = "3eb753ce713306a49cef0e07a4e4a0c82cf63fcfe7a28f57bcb40b2c37702471"
+content-hash = "3b845ebcb4303f51b85673255b29a5d862947ea1423e2b1a60b9ae16f665f58b"
