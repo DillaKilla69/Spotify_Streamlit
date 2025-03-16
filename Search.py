@@ -52,7 +52,7 @@ if submit_query:
             )
             col4.metric(
                 label="Popularity",
-                value=(get_artist(sp))["popularity"],
+                value=(get_artist(sp, sidebar_input))["popularity"],
             )
 
             with st.expander("top tracks", expanded=True):
