@@ -13,18 +13,17 @@ def get_artist_id(sp, artist_name):
     return None  # Return None if no exact match found
 
 
-def search_albums(sp, artist_name):
+def search_albums(sp, artist_name, types=None):
     # Search for all data associated with search term and data type
 
+    album_list = st.session_state["albums"]
     album_list = []
     artist_id = get_artist_id(sp, artist_name)
 
     if not artist_id:
         return f"No exact match found for '{artist_name}'"
 
-    albums = sp.artist_albums(
-        artist_id, album_type="album", include_groups="album,single"
-    )
+    albums = sp.artist_albums(artist_id, album_type="album", include_groups=f"{types}")
     # Expose data within the returned JSON
     album_list = [
         {
@@ -41,8 +40,6 @@ def search_albums(sp, artist_name):
         by="Release Date", ascending=True
     )
 
-    st.subheader(f"{artist_name} albums")
-    st.dataframe(album_sorted_df, hide_index=True)
     return album_sorted_df if isinstance(album_sorted_df, pd.DataFrame) else None
 
 
@@ -112,3 +109,9 @@ def artist_genres(sp, band):
 
     genres_table = pd.json_normalize(genres)
     st.write(genres_table)
+
+
+def get_artist(sp, band):
+    id = get_artist_id(sp, band)
+    artist = sp.artist(id)
+    return artist

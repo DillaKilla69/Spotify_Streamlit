@@ -33,3 +33,12 @@ def create_app_state():
 
     if "sidebar_input" not in st.session_state:
         st.session_state["sidebar_input"] = []
+
+    if "albums" not in st.session_state:
+        st.session_state["albums"] = []
+
+    if "followers" not in st.session_state:
+        st.session_state["followers"] = []
+
+    if "popularity" not in st.session_state:
+        st.session_state["popularity"] = []

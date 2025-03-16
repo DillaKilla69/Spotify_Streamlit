@@ -30,7 +30,9 @@ def album_type_over_time(album_df):
 
         # Group by Year and Album Type, then count occurrences
         album_counts = (
-            album_df.groupby(["Title","Year", "Album Type"]).size().reset_index(name="Count")
+            album_df.groupby(["Title", "Year", "Album Type"])
+            .size()
+            .reset_index(name="Count")
         )
 
         # Ensure there is valid data
@@ -46,7 +48,7 @@ def album_type_over_time(album_df):
                 x=alt.X("Year:O", title="Year"),  # Discrete ordinal X-axis
                 y=alt.Y("Count:Q", title="Number of Albums"),  # Quantitative Y-axis
                 color="Album Type:N",  # Different colors for each album type
-                tooltip=[ "Title", "Year", "Album Type", "Count"],  # Hover tooltips
+                tooltip=["Title", "Year", "Album Type", "Count"],  # Hover tooltips
             )
         )
         # Display in Streamlit
@@ -80,3 +82,14 @@ def track_popularity(sorted_tracks_df, artist):
     )
 
     st.altair_chart(chart, use_container_width=True)
+
+
+def format_number(value):
+    if value >= 1_000_000_000:
+        return f"{value / 1_000_000_000:.2f} B"
+    elif value >= 1_000_000:
+        return f"{value / 1_000_000:.2f} M"
+    elif value >= 1_000:
+        return f"{value / 1_000:.2f} K"
+    else:
+        return str(value)
