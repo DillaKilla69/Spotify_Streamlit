@@ -1,7 +1,6 @@
 import altair as alt
 import pandas as pd
 import streamlit as st
-from streamlit_timeline import st_timeline
 
 def album_type_distro(album_df: pd.DataFrame):
 

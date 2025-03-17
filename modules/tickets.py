@@ -1,6 +1,5 @@
 import ticketpy as tp
 import streamlit as st
-from streamlit_timeline import st_timeline
 from datetime import datetime, date
 import pandas as pd
 

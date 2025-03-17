@@ -103,7 +103,7 @@ def artist_genres(sp, band):
         artist = item["name"]
         genre = item["genres"] if item["genres"] else ["No data provided"]
         if not genre:
-            genre = "no data provided"
+            genre = "no genres provided"
 
         genres.append({"artist": artist, "genre": genre})
 
