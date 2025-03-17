@@ -1,7 +1,7 @@
 import altair as alt
 import pandas as pd
 import streamlit as st
-
+from streamlit_timeline import st_timeline
 
 def album_type_distro(album_df: pd.DataFrame):
 
@@ -18,47 +18,54 @@ def album_type_distro(album_df: pd.DataFrame):
 
 
 def album_type_over_time(album_df):
-
     try:
-        # Ensure "Release Date" column is properly formatted
-        album_df["Release Date"] = pd.to_datetime(
-            album_df["Release Date"], errors="coerce"
-        )
+        if album_df.empty:
+            st.warning("No data available.")
+            return
+
+        # Ensure "Release Date" is a datetime column
+        album_df["Release Date"] = pd.to_datetime(album_df["Release Date"], errors="coerce")
 
         # Extract Year
         album_df["Year"] = album_df["Release Date"].dt.year
 
-        # Group by Year and Album Type, then count occurrences
+        # Group by Year and Album Type, aggregate Titles, and count occurrences
         album_counts = (
-            album_df.groupby(["Title", "Year", "Album Type"])
-            .size()
-            .reset_index(name="Count")
+            album_df.groupby(["Year", "Album Type"])
+            .agg(
+                Count=("Title", "count"),  # Count albums/singles
+                Titles=("Title", lambda x: ", ".join(x))  # Preserve titles as comma-separated string
+            )
+            .reset_index()
         )
 
-        # Ensure there is valid data
+        # Ensure there's data to plot
         if album_counts.empty:
-            st.warning("No valid data available for album types over time.")
+            st.warning("No albums found to display.")
             return
+
+        # Compute min/max values from grouped data
+        min_release = album_counts["Count"].min()
+        max_release = album_counts["Count"].max()
 
         # Create Altair Chart
         chart = (
             alt.Chart(album_counts)
             .mark_line(point=True)  # Line chart with points
             .encode(
-                x=alt.X("Year:O", title="Year"),  # Discrete ordinal X-axis
-                y=alt.Y("Count:Q", title="Number of Albums"),  # Quantitative Y-axis
+                x=alt.X("Year:O", title="Year"),  # Ordinal X-axis (discrete years)
+                y=alt.Y("Count:Q", title="Number of Albums", scale=alt.Scale(domain=[min_release, max_release])),  # Y-axis scale
                 color="Album Type:N",  # Different colors for each album type
-                tooltip=["Title", "Year", "Album Type", "Count"],  # Hover tooltips
+                tooltip=["Titles", "Year", "Album Type", "Count"],  # Tooltip info
             )
         )
+
         # Display in Streamlit
         st.subheader("Album Type Distribution Over Time")
         st.altair_chart(chart, use_container_width=True)
 
     except Exception as e:
-        st.error(
-            f"🚨 Oops! Something went wrong while fetching data. Try another search term. \n\nError: {e}"
-        )
+        st.error(f"Error generating chart: {e}")
 
 
 def track_popularity(sorted_tracks_df, artist):

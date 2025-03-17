@@ -25,6 +25,9 @@ def create_app_state():
     if "client_secret" not in st.session_state:
         st.session_state["client_secret"] = st.secrets["clientSecret"]
 
+    if "ticketmaster" not in st.session_state:
+        st.session_state["ticketmaster"] = st.secrets["ticketMaster"]
+
     if "sp_session" not in st.session_state:
         st.session_state["sp_session"] = None
 
@@ -42,3 +45,6 @@ def create_app_state():
 
     if "popularity" not in st.session_state:
         st.session_state["popularity"] = []
+
+    if "genres" not in st.session_state:
+        st.session_state["genres"] = []

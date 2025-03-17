@@ -8,9 +8,9 @@ from modules.etl import (
     format_number,
     track_popularity,
 )
-from modules.search import artist_genres, get_artist, search_albums, top_tracks
+from modules.search import artist_genres, get_artist, search_albums, top_tracks, get_all_albums
 from modules.state_manager import create_app_state
-
+from modules.tickets import get_events
 create_app_state()
 
 sp = create_sp_session(st.session_state["client_id"], st.session_state["client_secret"])
@@ -47,19 +47,21 @@ if submit_query:
             col1.image(get_artist(sp, sidebar_input)["images"][2]["url"])
             col2.metric(label="Followers", value=format_number(num_followers))
             col3.metric(
-                label="Albums",
-                value=len(search_albums(sp, sidebar_input, types="album")),
+                label="Albums/Singles",
+                value=len(get_all_albums(sp, artist_name=sidebar_input)),
             )
             col4.metric(
                 label="Popularity",
                 value=(get_artist(sp, sidebar_input))["popularity"],
             )
 
-            with st.expander("top tracks", expanded=True):
+            with st.expander("top tracks", expanded=False):
                 tracks = top_tracks(sp, sidebar_input)
             with st.expander("albums"):
-                albums = search_albums(sp, sidebar_input, types="album,single")
+                albums = get_all_albums(sp, sidebar_input)
                 st.write(albums)
+            with st.expander("events"):
+                get_events(st.session_state["ticketmaster"], sidebar_input)
 
         except Exception as e:
             st.write(e)
@@ -67,9 +69,9 @@ if submit_query:
     elif st.session_state["selected_option"] == "Top Tracks":
         try:
             st.header(f"{sidebar_input} Track Analysis")
-            with st.expander("Tracklist", expanded=True):
+            with st.expander(f"{sidebar_input} Tracklist", expanded=True):
                 tracks = top_tracks(sp, band=sidebar_input)
-            with st.expander("Popularity"):
+            with st.expander(f"{sidebar_input} Popularity"):
                 st.header(f"{sidebar_input} Tracks by Popularity Over Time")
                 track_popularity(tracks, sidebar_input)
         except Exception as e:
@@ -78,19 +80,21 @@ if submit_query:
     elif st.session_state["selected_option"] == "Discography":
         try:
             st.header(f"{sidebar_input} Discography Analysis")
-            with st.expander("Discography", expanded=True):
-                albums = search_albums(sp, sidebar_input, types="album, single")
-                st.subheader(f"{sidebar_input} albums")
-                st.dataframe(albums, hide_index=True)
-            with st.expander("album distribution", expanded=False):
-                album_type_distro(albums)
-                album_type_over_time(albums)
+            with st.expander(f"{sidebar_input} Discography", expanded=True):
+                # albums = search_albums(sp, sidebar_input, types="album,single")
+                # st.subheader(f"{sidebar_input} albums")
+                # st.dataframe(albums, hide_index=False)
+                all_albums = get_all_albums(sp, artist_name=sidebar_input)
+                st.write(all_albums)
+            with st.expander(f"{sidebar_input} Release Timeline", expanded=False):
+                album_type_distro(all_albums)
+                album_type_over_time(all_albums)
         except Exception as e:
             st.error(f"🚨 Error retrieving discography: {e}")
 
     elif st.session_state["selected_option"] == "Artist Genres":
         try:
+            band = get_artist(sp, band=sidebar_input)
             artist_genres(sp, band=sidebar_input)
-            get_artist(sp, sidebar_input)
         except Exception as e:
             st.error(f"🚨 Error retrieving artist genres: {e}")

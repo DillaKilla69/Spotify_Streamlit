@@ -23,7 +23,7 @@ def search_albums(sp, artist_name, types=None):
     if not artist_id:
         return f"No exact match found for '{artist_name}'"
 
-    albums = sp.artist_albums(artist_id, album_type="album", include_groups=f"{types}")
+    albums = sp.artist_albums(artist_id, include_groups=f"{types}")
     # Expose data within the returned JSON
     album_list = [
         {
@@ -38,7 +38,7 @@ def search_albums(sp, artist_name, types=None):
     # Sort the album list by release_date in ascending order
     album_sorted_df = pd.DataFrame(album_list).sort_values(
         by="Release Date", ascending=True
-    )
+    ).reset_index()
 
     return album_sorted_df if isinstance(album_sorted_df, pd.DataFrame) else None
 
@@ -115,3 +115,48 @@ def get_artist(sp, band):
     id = get_artist_id(sp, band)
     artist = sp.artist(id)
     return artist
+
+if "albums" not in st.session_state:
+    st.session_state["albums"] = []
+
+
+# Ensure session state exists
+if "albums" not in st.session_state:
+    st.session_state["albums"] = []
+
+def get_all_albums(sp, artist_name, limit=50):
+    all_albums = []  # Do not reset st.session_state["albums"] inside the function
+    offset = 0
+    artist_id = get_artist_id(sp, artist_name)
+
+    if not artist_id:
+        return f"No exact match found for '{artist_name}'"
+
+    while True:
+        results = sp.artist_albums(artist_id, album_type="album,single", limit=limit, offset=offset)
+        
+        if not results["items"]:  
+            break  # Stop when there are no more results
+
+        album_list = [
+            {
+                "Title": album["name"],
+                "Album Type": album["album_type"],  # Access album type
+                "Release Date": album["release_date"],
+                "Total Tracks": album["total_tracks"],
+            }
+            for album in results["items"]
+        ]
+
+        all_albums.extend(album_list)  # Append new results to the list
+        offset += limit  # Move to the next batch
+
+    # Save the albums in session state
+    st.session_state["albums"] = all_albums  
+
+    # Sort the album list by release_date in ascending order
+    album_sorted_df = pd.DataFrame(all_albums).sort_values(
+        by="Release Date", ascending=True
+    ).reset_index(drop=True)
+
+    return album_sorted_df if not album_sorted_df.empty else None

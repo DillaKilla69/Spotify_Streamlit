@@ -16,7 +16,10 @@ dependencies = [
     "pykernel (>=0.1.6,<0.2.0)",
     "ipykernel (>=6.29.5,<7.0.0)",
     "matplotlib (>=3.10.1,<4.0.0)",
-    "spotifyapi (>=0.1.1,<0.2.0)"
+    "spotifyapi (>=0.1.1,<0.2.0)",
+    "ticketpy (>=1.1.2,<2.0.0)",
+    "setuptools (>=76.0.0,<77.0.0)",
+    "streamlit-vis-timeline (>=0.3.0,<0.4.0)"
 ]
 
 [tool.poetry]
