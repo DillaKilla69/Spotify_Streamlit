@@ -11,6 +11,7 @@ from modules.etl import (
 from modules.search import artist_genres, get_artist, search_albums, top_tracks, get_all_albums
 from modules.state_manager import create_app_state
 from modules.tickets import get_events
+
 create_app_state()
 
 sp = create_sp_session(st.session_state["client_id"], st.session_state["client_secret"])
