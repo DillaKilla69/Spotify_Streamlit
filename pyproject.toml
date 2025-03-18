@@ -19,7 +19,9 @@ dependencies = [
     "spotifyapi (>=0.1.1,<0.2.0)",
     "ticketpy (>=1.1.2,<2.0.0)",
     "setuptools (>=76.0.0,<77.0.0)",
-    "streamlit-vis-timeline (>=0.3.0,<0.4.0)"
+    "streamlit-vis-timeline (>=0.3.0,<0.4.0)",
+    "charset-normalizer (>=3.4.1,<4.0.0)",
+    "chardet (>=5.2.0,<6.0.0)"
 ]
 
 [tool.poetry]
