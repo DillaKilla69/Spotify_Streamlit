@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 
-from .modules.creds import create_sp_session
+from modules.creds import create_sp_session
 from modules.etl import (
     album_type_distro,
     album_type_over_time,
