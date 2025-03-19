@@ -23,7 +23,7 @@ def album_type_over_time(album_df):
             return
 
         # Ensure "Release Date" is a datetime column
-        album_df["Release Date"] = pd.to_datetime(album_df["Release Date"], errors="coerce")
+        album_df["Release Date"] = pd.to_datetime(album_df["Release Date"], errors="raise", format="mixed")
 
         # Extract Year
         album_df["Year"] = album_df["Release Date"].dt.year
